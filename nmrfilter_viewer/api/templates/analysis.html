@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script src="{{url_for('static', filename='js/jquery.dependent.fields.js')}}"></script>
+
+{% if error %}
+    <div class="container">
+        <p class=error><strong>Error:</strong> {{ error }}
+    </div>
+{% endif %}
+
+<div class="container">
+    <form action="" method="post" role="form" enctype="multipart/form-data"> 
+        <div class="form-group">
+            <label for="category">Arquivos para selecionar para análise</label>
+            <select id="category" name='category' multiple class="form-control"> // addition here
+                {% for opt in options %}
+                    <option>  {{ opt }} </option>
+                {% endfor %}
+            </select>
+        </div>
+
+          <p>
+            <label for="remove">
+             Remover arquivos selecionados 
+            </label>
+            <select id="remove" name="remove" value="" class="">
+              <option value="nao">Não</option>
+              <option value="sim">Sim</option>
+            </select>
+          </p>
+
+
+         <p>
+         <label for="exampleInputEmail1">Classe para Análise</label>
+         <input type="text" class="form-control" id="mfield"  name="mfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos metadados">
+        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para metadados ajuda.</small>
+        </p>
+         <p>
+         <label for="exampleInputEmail2">Variável para Análise</label>
+         <input type="text" class="form-control" id="dfield"  name="dfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos dados">
+        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para variável ajuda.</small>
+        </p>
+
+          <p>
+            <label for="analise">
+             Opções de Análise 
+            </label>
+            <select id="master-dropdown" name="analise" value="" class="">
+              <option value="">-- Selecione uma análise--</option>
+              <option value="univariada">Univariada</option>
+              <option value="multivariada">Multivariada</option>
+              <option value="correlacao">Rede de Correlação</option>
+            </select>
+          </p>
+
+        <p>
+        <label for="dependent-dropdown1">
+         Análises univariadas 
+        </label>
+        <select id="dependent-dropdown1" name="univar">
+          <option value="">-- Selecione uma análise Univariada--</option>
+          <option value="anova">Anova</option>
+          <option value="tukey">Tukey</option>
+          <option value="kruskal">Kruskal</option>
+          <option value="boxplot">Boxplot</option>
+          <option value="boxplot_tukey">Boxplot Tukey</option>
+        </select>
+        </p>
+
+        <p>
+        <label for="dependent-dropdown2">
+         Análises multivariadas 
+        </label>
+        <select id="dependent-dropdown2"  name="mult">
+          <option value="">-- Selecione uma análise multivariada --</option>
+          <option value="pcoa">PCoA</option>
+          <option value="heat">Heatmap</option>
+          <option value="arv">Arvore de Decisão</option>
+        </select>
+        </p>
+        <button type="submit" class="btn btn-primary">Submeter</button>
+    </form>
+</div>
+<script>
+$('#dependent-dropdown1').dependsOn('#master-dropdown', ['univariada']);
+$('#dependent-dropdown2').dependsOn('#master-dropdown', ['multivariada']);
+$('#dependent-dropdown3').dependsOn('#master-dropdown', ['vias']);
+</script>
+
+{% endblock %}
