@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 
 personal = Blueprint('personal', __name__, template_folder='templates')
 
@@ -75,7 +76,15 @@ def analysis():
                     os.remove(os.path.join('api/static/uploads', fn))
             return redirect(url_for('personal.analysis'))
         try:
-            compute(form_dict, data_list, str(uuid.uuid4()))
+            uid = str(uuid.uuid4())
+            res = 'api/static/results/%s' % uid
+            os.mkdir(res)
+            for fn in data_list:
+                src = os.path.join('api/static/uploads', fn)
+                dst = os.path.join('api/static/results', uid, fn.split('_')[1])
+                shutil.copyfile(src, dst)
+            subprocess.call(['python', 'api/nmrfilter_reshape.py',
+                             res, '>&', os.path.join(res, 'log.txt')])
         except Exception as e:
             #print(e)
             return render_template('analysis.html', options=options,
@@ -87,15 +96,9 @@ def analysis():
 @personal.route('/results')
 def results():
     fls = os.listdir('api/static/results')
-    meas = [x.split('###') for x in fls]
-    for i in range(len(meas)):
-        tmp = meas[i]+[]
-        url = '/static/results/%s' % '###'.join(tmp)
-        #link = f'<a href="{url}" target="_blank">File</a>'
-        link = url
-        tmp = [re.sub('.tsv$|.pdf$|.gml$', '', x) for x in tmp]
-        tmp.append(link)
-        meas[i] = tmp
+    meas = []
+    for fl in fls:
+        meas.append([fl, '/static/results/%s' % fl])
     ddffinal = json.dumps(meas, cls=NpEncoder)
     return render_template('results.html',
                            dffinal=ddffinal)
@@ -104,11 +107,18 @@ def results():
 @personal.route('/download')
 def download():
     taskid = request.args.get('taskid')
-    dr = os.path.join('api/static/results')
-    fls = os.listdir(dr)
-    fls = [x for x in fls if taskid in x][0]
-    fls = 'static/results/%s' % fls
+    filename = request.args.get('filename')
+    fls = f'static/results/{taskid}/{filename}'
     return send_file(fls, as_attachment=True)
+
+@personal.route('/listfiles')
+def listfiles():
+    taskid = request.args.get('taskid')
+    filename = request.args.get('filename')
+    fls = f'static/results/{taskid}/{filename}'
+    return send_file(fls, as_attachment=True)
+
+
 
 @personal.route('/delete')
 def delete():

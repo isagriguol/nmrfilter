@@ -33,53 +33,18 @@
 
 
          <p>
-         <label for="exampleInputEmail1">Classe para Análise</label>
-         <input type="text" class="form-control" id="mfield"  name="mfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos metadados">
-        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para metadados ajuda.</small>
-        </p>
-         <p>
-         <label for="exampleInputEmail2">Variável para Análise</label>
-         <input type="text" class="form-control" id="dfield"  name="dfield" aria-describedby="textHelp" placeholder="Nome da coluna exatamente como nos dados">
-        <small id="textHelp" class="form-text text-muted">Utilizar nomes simples para variável ajuda.</small>
-        </p>
 
           <p>
             <label for="analise">
-             Opções de Análise 
+             Opções de Solvente 
             </label>
             <select id="master-dropdown" name="analise" value="" class="">
               <option value="">-- Selecione uma análise--</option>
-              <option value="univariada">Univariada</option>
-              <option value="multivariada">Multivariada</option>
-              <option value="correlacao">Rede de Correlação</option>
+              <option value="methanol">Methanol-D4 (CD3OD)</option>
+              <option value="chloroform">Chloroform-D1 (CDCl3)</option>
             </select>
           </p>
 
-        <p>
-        <label for="dependent-dropdown1">
-         Análises univariadas 
-        </label>
-        <select id="dependent-dropdown1" name="univar">
-          <option value="">-- Selecione uma análise Univariada--</option>
-          <option value="anova">Anova</option>
-          <option value="tukey">Tukey</option>
-          <option value="kruskal">Kruskal</option>
-          <option value="boxplot">Boxplot</option>
-          <option value="boxplot_tukey">Boxplot Tukey</option>
-        </select>
-        </p>
-
-        <p>
-        <label for="dependent-dropdown2">
-         Análises multivariadas 
-        </label>
-        <select id="dependent-dropdown2"  name="mult">
-          <option value="">-- Selecione uma análise multivariada --</option>
-          <option value="pcoa">PCoA</option>
-          <option value="heat">Heatmap</option>
-          <option value="arv">Arvore de Decisão</option>
-        </select>
-        </p>
         <button type="submit" class="btn btn-primary">Submeter</button>
     </form>
 </div>

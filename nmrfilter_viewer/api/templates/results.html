@@ -15,19 +15,12 @@
         console.log(dataSet);
         var i;
         for (i = 0; i < dataSet.length; i++) {
-            if (dataSet[i][1]=='PCoA') { 
-                var uri = `${dataSet[i][0]}###${dataSet[i][1]}###${dataSet[i][2]}###${dataSet[i][3]}`
-                var res = encodeURIComponent(uri);
-                var msg = `<a href="/static/results/${res}/index.html" target="_blank">File</a>`
-                dataSet[i][4] = msg
-            } else {
-                var tmp = dataSet[i][0]
-                var msg = `<a href="/lmscc/download?taskid=${tmp}" target="_blank">File</a>`
-                dataSet[i][4] = msg
-            }
+            var tmp = dataSet[i][0]
+            var msg = `<a href="/lmscc/listfiles?taskid=${tmp}" target="_blank">Files</a>`
+            dataSet[i][1] = msg
             var tmp = dataSet[i][0]
             var msg = `<a href="/lmscc/delete?taskid=${tmp}">Delete</a>`
-            dataSet[i][5] = msg
+            dataSet[i][2] = msg
         }
         $(document).ready(function() {
     	$('#resTable').DataTable( {
@@ -35,9 +28,6 @@
     	    // add column definitions to map your json to the table
     	    "columns": [
     		{title: "ID"},
-    		{title: "Test"},
-    		{title: "Field"},
-    		{title: "Time"},
     		{title: "Result"},
     		{title: "Delete"}
     	    ]
@@ -50,9 +40,6 @@
 		<thead>
 	    <tr>
 		<th>ID</th>
-		<th>Test</th>
-		<th>Field</th>
-		<th>Time</th>
 		<th>Result</th>
 		<th>Delete</th>
 	    </tr>

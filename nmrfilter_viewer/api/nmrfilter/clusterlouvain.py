@@ -17,13 +17,13 @@ def Two_Column_List(file):
 def cluster2dspectrumlouvain(cp, project):
 	datapath=cp.get('datadir')
 
-	realpeaks = Two_Column_List(datapath+os.sep+project+os.sep+cp.get('spectruminput'))
+	realpeaks = Two_Column_List(project+os.sep+cp.get('spectruminput'))
 	#print(realpeaks)
-	g=Graph.Read_Edgelist(datapath+os.sep+project+os.sep+'result'+os.sep+cp.get('clusteringoutput'),directed=False)
+	g=Graph.Read_Edgelist(project+os.sep+'result'+os.sep+cp.get('clusteringoutput'),directed=False)
 	#print(g)
 	louvainresult= louvain.find_partition(g, louvain.RBERVertexPartition, resolution_parameter=float(cp.get('rberresolution')))
 	#print(louvainresult)
-	f=open(datapath+os.sep+project+os.sep+'result'+os.sep+cp.get('louvainoutput'),'w')
+	f=open(project+os.sep+'result'+os.sep+cp.get('louvainoutput'),'w')
 	for cluster in louvainresult:
 		if len(cluster)>0:
 			f.write('/\n')	

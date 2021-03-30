@@ -21,7 +21,7 @@ def Two_Column_List(file):
 
 def similarity(cp, project):
 	datapath=cp.get('datadir')
-	fp = open(datapath+os.sep+project+os.sep+'result'+os.sep+cp.get('predictionoutput'),'r')
+	fp = open(project+os.sep+'result'+os.sep+cp.get('predictionoutput'),'r')
 	spectra_simulated = []
 	spectrum_simulated= []
 	line=fp.readline().strip()
@@ -38,7 +38,7 @@ def similarity(cp, project):
 	#print(spectra_simulated)
 	fp.close()
 
-	fp = open(datapath+os.sep+project+os.sep+'result'+os.sep+cp.get('louvainoutput'),'r')
+	fp = open(project+os.sep+'result'+os.sep+cp.get('louvainoutput'),'r')
 	clusters_real = []
 	cluster_real= []
 	line=fp.readline().strip()
@@ -56,7 +56,7 @@ def similarity(cp, project):
 	#print(clusters_real)
 	fp.close()
 
-	spectrum_real = Two_Column_List(datapath+os.sep+project+os.sep+cp.get('spectruminput'))
+	spectrum_real = Two_Column_List(project+os.sep+cp.get('spectruminput'))
 
 	costs = {}
 	stddevs = {}
@@ -240,7 +240,7 @@ def similarity(cp, project):
 			overallcosts[(costspercompound_norm[i]+1)/2].append(i)
 		i+=1
 
-	fp = open(datapath+os.sep+project+os.sep+cp.get('msmsinput'),'r')
+	fp = open(project+os.sep+cp.get('msmsinput'),'r')
 	line=fp.readline().strip()
 	smiles=[]
 	while line:
@@ -249,8 +249,8 @@ def similarity(cp, project):
 	usehsqctocsy = cp.get('usehsqctocsy')
 	debug = cp.get('debug')
 	usehmbc = cp.get('usehmbc')
-	if os.path.exists(datapath+os.sep+project+os.sep+cp.get('msmsinput')[0:len(cp.get('msmsinput'))-4]+'names.txt'):
-		with open(datapath+os.sep+project+os.sep+cp.get('msmsinput')[0:len(cp.get('msmsinput'))-4]+'names.txt') as f:
+	if os.path.exists(project+os.sep+cp.get('msmsinput')[0:len(cp.get('msmsinput'))-4]+'names.txt'):
+		with open(project+os.sep+cp.get('msmsinput')[0:len(cp.get('msmsinput'))-4]+'names.txt') as f:
 			linesnames = f.read().splitlines()
 	#we make plot
 	i=0
@@ -348,13 +348,13 @@ def similarity(cp, project):
 					ax.scatter(yrealrest, xrealrest, c='red', label='measured unused ('+str(len(yrealrest))+')', alpha=0.2, edgecolors='none', s=12)
 			ax.legend()
 			ax.grid(True)
-		fig.savefig(datapath+os.sep+project+os.sep+'plots'+os.sep+name+'.png', transparent=False, dpi=80, bbox_inches="tight")
+		fig.savefig(project+os.sep+'plots'+os.sep+name+'.png', transparent=False, dpi=80, bbox_inches="tight")
 		i+=1
 		plt.close()
 		
 	i=0
-	fp = open(datapath+os.sep+project+os.sep+'result'+os.sep+cp.get('result'),'w')
-	fpcsv = open(datapath+os.sep+project+os.sep+'result'+os.sep+cp.get('result')+'.csv','w')
+	fp = open(project+os.sep+'result'+os.sep+cp.get('result'),'w')
+	fpcsv = open(project+os.sep+'result'+os.sep+cp.get('result')+'.csv','w')
 	if len(linesnames)>0:
 		fpcsv.write('ID\tsmiles\tname\tdistance\tstandard deviation')
 	else:
