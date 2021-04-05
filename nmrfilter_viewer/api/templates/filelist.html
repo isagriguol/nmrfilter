@@ -10,8 +10,10 @@
 
     <script src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 
-    {% for i in filelist %}
-    <a href="/lmscc/listfiles?taskid=tkid{{ i }}">i</a>{% if not loop.last %}, {% endif %}
-    {% endfor %}
+    <ul>
+      {% for file in filelist %}
+        <li><a href="/nmrfilter/download?taskid={{tkid}}&filename={{file}}&ty={{ty}}">{{ file }}</a></li>
+      {% endfor %}
+    </ul>
 
 {% endblock %}

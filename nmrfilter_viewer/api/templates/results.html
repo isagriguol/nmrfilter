@@ -16,11 +16,15 @@
         var i;
         for (i = 0; i < dataSet.length; i++) {
             var tmp = dataSet[i][0]
-            var msg = `<a href="/lmscc/listfiles?taskid=${tmp}" target="_blank">Files</a>`
+            var msg = `<a href="/nmrfilter/listfiles?taskid=${tmp}&ty=result" target="_blank">Files</a>`
             dataSet[i][1] = msg
             var tmp = dataSet[i][0]
-            var msg = `<a href="/lmscc/delete?taskid=${tmp}">Delete</a>`
+            var msg = `<a href="/nmrfilter/delete?taskid=${tmp}">Delete</a>`
+            dataSet[i][3] = msg
+            var tmp = dataSet[i][0]
+            var msg = `<a href="/nmrfilter/listfiles?taskid=${tmp}&ty=plots" target="_blank">Files</a>`
             dataSet[i][2] = msg
+
         }
         $(document).ready(function() {
     	$('#resTable').DataTable( {
@@ -29,6 +33,7 @@
     	    "columns": [
     		{title: "ID"},
     		{title: "Result"},
+    		{title: "Plots"},
     		{title: "Delete"}
     	    ]
     	} );
@@ -41,6 +46,7 @@
 	    <tr>
 		<th>ID</th>
 		<th>Result</th>
+		<th>Plots</th>
 		<th>Delete</th>
 	    </tr>
 	    </thead>
