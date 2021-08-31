@@ -87,10 +87,13 @@ def analysis():
                              res, '>&', os.path.join(res, 'log.txt')])
         except Exception as e:
             #print(e)
-            return render_template('analysis.html', options=options,
-                                   error=str(e))
+            #return render_template('analysis.html', options=options,
+            #                       error=str(e))
+            return render_template('teste.html', options=options,
+                                   error=str(e))                                   
         return redirect(url_for('personal.results'))
-    return render_template('analysis.html', options=options, error=error)
+    #return render_template('analysis.html', options=options, error=error)
+    return render_template('teste.html', options=options, error=error)
 
 
 @personal.route('/results')
