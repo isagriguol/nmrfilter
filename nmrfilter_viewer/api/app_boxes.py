@@ -46,14 +46,9 @@ def analysis():
     if request.method == 'POST':
         form_dict = dict(request.form)
         #data_list = request.form.getlist('category')
-        #peaks = request.form.getlist('isselect_code')
-        ## Modifiquei aqui
         peaks = request.form.getlist('isselect_code')
-        print(type(peaks))
         compounds = request.form.getlist('isselect_code1')
         solvente = solventes[form_dict['analise']]
-        print(peaks)
-        #print(peaks[0])
 
         #print(form_dict)
         #print(data_list)
@@ -70,19 +65,15 @@ def analysis():
                 src = os.path.join('api/static/uploads', fn)
                 dst = os.path.join('api/static/results', uid, fn.split('_')[1])
                 shutil.copyfile(src, dst)'''
-            if len(peaks)==1:
+            if peaks==1:
                 peaks_name = peaks[0]
-                print(peaks_name)
                 src = os.path.join('api/static/uplods', peaks_name)
                 dst = os.path.join('api/static/results', 'realspectrum.csv')
                 shutil.copyfile(src,dst)
-            else:
-                print('erro') 
-                print(len(peaks))
+            else: 
                 #dar uma mensagem de erro. Como??
-                #except Exception as e:
-                    #return render_template('teste1.html', options=options, error=str(e))
-
+                except Exception as e:
+                    return render_template('teste1.html', options=options, error=str(e))
             for fn in compounds: 
                 src1 = os.path.join('api/static/uplods',compounds )
                 dst1 = os.path.join('api/static/results', 'realspectrum.csv')
@@ -99,10 +90,10 @@ def analysis():
                              res, '>&', os.path.join(res, 'log.txt')])
         except Exception as e:
             #print(e)
-            return render_template('analysis.html', options=options,
+            return render_template('teste1.html', options=options,
                                    error=str(e))
         return redirect(url_for('personal.results'))
-    return render_template('analysis.html', options=options, error=error)
+    return render_template('teste1.html', options=options, error=error)
 
 
 @personal.route('/results')

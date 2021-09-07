@@ -38,7 +38,7 @@
             <div class="row align-items-center">
                 <div class="form-group">
                     <ul>
-                        <label for="isselect_code">Arquivos de picos</label>
+                        <p>Arquivo de picos</p>
                         <select id='canselect_code' name='canselect_code' multiple class='box2'>
                             {% for opt in options %}
                                 <option>  {{ opt }} </option>
@@ -46,7 +46,6 @@
                         </select>
                         <input type='button' id='btnRight_code' value='  >  ' />
                         <input type='button' id='btnLeft_code' value='  <  ' />
-                       <!--<label for="isselect_code">Arquivos de picos</label>-->
                         <select id='isselect_code' name='isselect_code' multiple class='box1'>
                         </select>
                     </ul>
@@ -59,6 +58,7 @@
             <div class="row align-items-center">
                 <div class="form-group">
                     <ul>
+                        <p>Arquivos de Compostos</p>
                         <select id='canselect_code1' name='canselect_code1' multiple class='box4'>
                             {% for opt in options %}
                                 <option>  {{ opt }} </option>
@@ -66,7 +66,6 @@
                         </select>
                         <input type='button' id='btnRight_code1' value='  >  ' />
                         <input type='button' id='btnLeft_code1' value='  <  ' />
-                        <label for="isselect_code1">Arquivos de Compostos</label>
                         <select id='isselect_code1' name='isselect_code1' multiple class='box3'>
                         </select>
                     </ul>
@@ -112,7 +111,7 @@
         <div class="row justify-content-md-center">
             <button type="submit" class="btn btn-primary">Submeter</button>
         </div>
-        </form>
+        <!--</form>-->
 
 
         <script>

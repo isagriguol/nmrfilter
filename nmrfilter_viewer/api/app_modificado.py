@@ -31,6 +31,20 @@ class NpEncoder(json.JSONEncoder):
 def index():
     return render_template('home.html')
 
+@personal.route('/graph')
+def graph():
+    df = pd.read_csv('Advertising.csv', index_col=0)
+    df.sort_values(['Sales'], inplace=True)
+    fig = go.Figure()
+    for cname in df.columns[:-1]:
+        fig.add_scatter(x=df[cname], y=df['Sales'], name=cname, mode="markers")
+
+    fig.update_layout(width=1600, height=800)
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('graph.html',
+                           ids='invest',
+                           graphJSON=graphJSON)
+
 @personal.route('/upload', methods=['POST', 'GET'])
 def upload():
     if request.method == 'POST':
@@ -45,16 +59,22 @@ def analysis():
     error = None
     if request.method == 'POST':
         form_dict = dict(request.form)
+        # Apaguei aqui
         #data_list = request.form.getlist('category')
-        #peaks = request.form.getlist('isselect_code')
-        ## Modifiquei aqui
+        # Adicionei aqui
         peaks = request.form.getlist('isselect_code')
-        print(type(peaks))
         compounds = request.form.getlist('isselect_code1')
-        solvente = solventes[form_dict['analise']]
-        print(peaks)
-        #print(peaks[0])
+        if len(peaks)==1:
+            peaks_file = peaks[0]
+            src = os.path.join('api/static/uploads', peaks_file)
+            dst = os.path.join('api/static/results', realspectrum.csv)
+        else: 
+            return render_template('teste1.html', options=options,
+                        error=str(e))
 
+        ########
+
+        solvente = solventes[form_dict['analise']]
         #print(form_dict)
         #print(data_list)
         if form_dict['remove']=='sim':
@@ -62,32 +82,54 @@ def analysis():
                 for fn in data_list:
                     os.remove(os.path.join('api/static/uploads', fn))
             return redirect(url_for('personal.analysis'))
+        '''
+            try:
+                    uid = str(uuid.uuid4())
+                    res = 'api/static/results/%s' % uid
+                    os.mkdir(res)
+                    for fn in data_list:
+                        src = os.path.join('api/static/uploads', fn)
+                        dst = os.path.join('api/static/results', uid, fn.split('_')[1])
+                        shutil.copyfile(src, dst)
+
+                    config = configparser.RawConfigParser()
+                    config.read('nmrproc.properties')
+                    config['onesectiononly']['solvent'] = solvente
+                    with open('api/nmrproc.properties', 'w+') as f:
+                        config.write(f)
+                    res = 'static/results/%s' % uid
+                    subprocess.call(['python', 'api/nmrfilter_reshape.py',
+                                    res, '>&', os.path.join(res, 'log.txt')])
+                except Exception as e:
+                    #print(e)
+                    #return render_template('analysis.html', options=options,
+                    #                       error=str(e))
+                    return render_template('teste1.html', options=options,
+                                        error=str(e))                                   
+                return redirect(url_for('personal.results'))
+            #return render_template('analysis.html', options=options, error=error)
+            return render_template('teste1.html', options=options, error=error)
+        '''
+    #Adicionei aqui 
         try:
             uid = str(uuid.uuid4())
             res = 'api/static/results/%s' % uid
             os.mkdir(res)
-            '''for fn in data_list:
-                src = os.path.join('api/static/uploads', fn)
-                dst = os.path.join('api/static/results', uid, fn.split('_')[1])
-                shutil.copyfile(src, dst)'''
             if len(peaks)==1:
-                peaks_name = peaks[0]
-                print(peaks_name)
-                src = os.path.join('api/static/uplods', peaks_name)
-                dst = os.path.join('api/static/results', 'realspectrum.csv')
-                shutil.copyfile(src,dst)
+                peaks_file = peaks[0]
+                src = os.path.join('api/static/uploads', peaks_file)
+                dst = os.path.join('api/static/results', realspectrum.csv)
+                shutil.copyfile(src, dst)
             else:
-                print('erro') 
-                print(len(peaks))
-                #dar uma mensagem de erro. Como??
-                #except Exception as e:
-                    #return render_template('teste1.html', options=options, error=str(e))
-
-            for fn in compounds: 
-                src1 = os.path.join('api/static/uplods',compounds )
-                dst1 = os.path.join('api/static/results', 'realspectrum.csv')
-                shutil.copyfile(src1,dst1)
-            
+                except Exception as e:
+                    #print(e)
+                    #return render_template('analysis.html', options=options,
+                    #                       error=str(e))
+                    return render_template('teste1.html', options=options,
+                                        error=str(e))
+                             
+            return render_template('teste1.html', options=options,
+                            error=str(e))
 
             config = configparser.RawConfigParser()
             config.read('nmrproc.properties')
@@ -97,13 +139,18 @@ def analysis():
             res = 'static/results/%s' % uid
             subprocess.call(['python', 'api/nmrfilter_reshape.py',
                              res, '>&', os.path.join(res, 'log.txt')])
+
         except Exception as e:
             #print(e)
-            return render_template('analysis.html', options=options,
-                                   error=str(e))
+            #return render_template('analysis.html', options=options,
+            #                       error=str(e))
+            return render_template('teste1.html', options=options,
+                                   error=str(e))                                   
         return redirect(url_for('personal.results'))
-    return render_template('analysis.html', options=options, error=error)
-
+    #return render_template('analysis.html', options=options, error=error)
+    return render_template('teste1.html', options=options, error=error)
+    
+    #######
 
 @personal.route('/results')
 def results():
