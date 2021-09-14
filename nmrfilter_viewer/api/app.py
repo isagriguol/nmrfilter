@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import configparser
+import pandas as pd
 
 personal = Blueprint('personal', __name__, template_folder='templates')
 
@@ -26,6 +27,31 @@ class NpEncoder(json.JSONEncoder):
             return obj.tolist()
         else:
             return super(NpEncoder, self).default(obj)
+
+def convert_df(src,uid): 
+    peaks = pd.read_excel(src)
+    f1 = peaks['f1 (ppm)'].tolist()
+    del f1[0]
+    f1.insert(0,'HSQC')
+    f2 = peaks['f2 (ppm)'].tolist()
+    del f2[0]
+    f2.insert(0,'')
+    f3 = peaks['f1 (ppm).1'].tolist()
+    f3.insert(0,'HMBC')
+    f4 = peaks['f2 (ppm).1'].tolist()
+    f4.insert(0,'')
+    lst1 = f1 + f3
+    lst2 = f2 + f4
+    lst = []
+    a = 0 
+    for i in lst1:
+        j = lst2[a]
+        lst.append((i,j))
+        a = a + 1
+    df = pd.DataFrame(lst).dropna()
+    df.to_csv('api/static/results/%s/realspectrum.csv' %uid, header=False, index=False, sep='\t')
+
+
 
 @personal.route('/')
 def index():
@@ -97,13 +123,28 @@ def analysis():
                 print(peaks) 
                 src = os.path.join('api/static/uploads', peaks[0])
                 dst = os.path.join('api/static/results', uid, peaks[0].split('_')[1])
-                shutil.copyfile(src, dst)
+                #shutil.copyfile(src, dst)
+                convert_df(src,uid)
             '''else: 
                 except Exception as e:
                     return render_template('testando.html', options=options,
                                    error=str(e))'''
-            if len(molecules)==2:
-                print(molecules)
+            '''if len(molecules)==2:
+                print(molecules)'''
+            for fn in molecules:
+                src = os.path.join('api/static/uploads', fn)
+                dst = os.path.join('api/static/results', uid, fn.split('_')[1])
+                shutil.copyfile(src, dst)
+
+            config = configparser.RawConfigParser()
+            config.read('nmrproc.properties')
+            config['onesectiononly']['solvent'] = solvente
+            with open('api/nmrproc.properties', 'w+') as f:
+                config.write(f)
+            res = 'static/results/%s' % uid
+            subprocess.call(['python', 'api/nmrfilter_reshape.py',
+                             res, '>&', os.path.join(res, 'log.txt')])
+
 
 
         except Exception as e:
