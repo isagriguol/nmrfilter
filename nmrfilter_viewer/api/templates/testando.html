@@ -8,21 +8,33 @@
         <script src="{{url_for('static', filename='js/jquery.dependent.fields.js')}}"></script>
 
         <style>
-            select {
-        width:400px;
-        height:200px;
-        }
         .box1 {
         float:left;
+        width:500px;
+        height:200px;
         }
         .box2 {
         float:right;
+        width:500px;
+        height:200px;
         }
         .box3{
         float:left;
+        width:500px;
+        height:200px;
         }
         .box4 {
         float: right;
+        width:500px;
+        height:200px;
+        }
+        #remove {
+        width:400px;
+        height:50px;
+        }
+        #master-dropdown{
+        width:400px;
+        height:50px;
         }
         </style>
     </head>
@@ -35,66 +47,79 @@
 
   <div class="container">
     <form action="" method="post" role="form" enctype="multipart/form-data">
-        <div class="form-group">
-            <select id='canselect_code' name='canselect_code' multiple class='box1'>
-                {% for opt in options %}
-                    <option>  {{ opt }} </option> 
-                {% endfor %}
-            </select>
-            <input type='button' id='btnRight_code' value='  >  ' />
-            <br>
-            <input type='button' id='btnLeft_code' value='  <  ' />
-            <select id='isselect_code' name='isselect_code' multiple class='box2'>
-            </select>
+        <div class="row align-items-center">
+            <div class="form-group">
+                <ul>
+                    <select id='canselect_code' name='canselect_code' multiple class='box1'>
+                        {% for opt in options %}
+                            <option>  {{ opt }} </option>
+                        {% endfor %}
+                    </select>
+                    <input type='button' id='btnRight_code' value='  >  ' />
+                    <input type='button' id='btnLeft_code' value='  <  ' />
+                    <select id='isselect_code' name='isselect_code' multiple class='box2'>
+                    </select>
+                </ul>
+            </div>
         </div>
-    <form action="" method="post" role="form" enctype="multipart/form-data">
-        <div class="form-group">
-            <select id='canselect_code1' name='canselect_code1' multiple class='box3'>
-                {% for opt in options %}
-                    <option>  {{ opt }} </option> 
-                {% endfor %}
-            </select>
-            <input type='button' id='btnRight_code1' value='  >  ' />
-            <br>
-            <input type='button' id='btnLeft_code1' value='  <  ' />
-            <select id='isselect_code1' name='isselect_code1' multiple class='box4'>
-            </select>
+        <div class="row align-items-center">
+            <div class="form-group">
+                <ul>
+                    <select id='canselect_code1' name='canselect_code1' multiple class='box3'>
+                        {% for opt in options %}
+                            <option>  {{ opt }} </option>
+                        {% endfor %}
+                    </select>
+                    <input type='button' id='btnRight_code1' value='  >  ' />
+                    <input type='button' id='btnLeft_code1' value='  <  ' />
+                    <select id='isselect_code1' name='isselect_code1' multiple class='box4'>
+                    </select>
+                </ul>
+            </div>
         </div>
-	<br>
+        <br>
         <div class="form-group">
         <p>
-            <label for="remove">
-             Remover arquivos selecionados 
-            </label>
-            <select id="remove" name="remove" value="" class="">
-              <option value="nao">Não</option>
-              <option value="sim">Sim</option>
-            </select>
+            <div class="row justify-content-md-center">
+                <label for="remove">
+                 Remover arquivos selecionados
+                </label>
+            </div>
+            <div class="row justify-content-md-center">
+                <select id="remove" name="remove" value="" class="">
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+                </select>
+            </div>
         </p>
         </div>
         <div class="form-group">
-            <p>
-              <label for="analise">
-               Opções de Solvente 
-              </label>
-              <select id="master-dropdown" name="analise" value="" class="" required>
-                <option value="">-- Selecione uma análise--</option>
-                <option value="methanol">Methanol-D4 (CD3OD)</option>
-                <option value="chloroform">Chloroform-D1 (CDCl3)</option>
-              </select>
-            </p>
+            <div class="row justify-content-md-center">
+                <label for="analise">
+                   Opções de Solvente
+                  </label>
+            </div>
+            <div class="row justify-content-md-center">
+                  <select id="master-dropdown" name="analise" value="" class="" required>
+                    <option value="">-- Selecione uma análise--</option>
+                    <option value="methanol">Methanol-D4 (CD3OD)</option>
+                    <option value="chloroform">Chloroform-D1 (CDCl3)</option>
+                  </select>
+            </div>
         </div>
-  
-        <button type="submit" class="btn btn-primary">Submeter</button>
+
+        <div class="row justify-content-md-center">
+            <button type="submit" class="btn btn-primary">Submeter</button>
+        </div>
     </form>
   </div>
 
         <script>
             $(document).ready(function(){
                 $('#btnRight_code').click(function (e) {
-                    
+
                     $(this).prev('select').find('option:selected').remove().appendTo('#isselect_code');
-                    
+
                 });
 
                 $('#btnLeft_code').click(function (e) {
@@ -103,9 +128,9 @@
 
                 });
                 $('#btnRight_code1').click(function (e) {
-                    
+
                     $(this).prev('select').find('option:selected').remove().appendTo('#isselect_code1');
-                    
+
                 });
 
                 $('#btnLeft_code1').click(function (e) {
@@ -118,3 +143,4 @@
     </body>
 </html>
 {% endblock %}
+

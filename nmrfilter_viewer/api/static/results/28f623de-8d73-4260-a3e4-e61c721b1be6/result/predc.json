@@ -13,9 +13,9 @@
         ],
         "model_checkpoint_filename": "models/default_13C.checkpoint",
         "model_meta_filename": "models/default_13C.meta",
-        "ts_start": "2021-09-14T20:09:24.181068",
-        "ts_end": "2021-09-14T20:09:24.323589",
-        "runtime_sec": 0.14252114295959473,
+        "ts_start": "2021-09-23T04:00:39.819280",
+        "ts_end": "2021-09-23T04:00:40.077759",
+        "runtime_sec": 0.25847887992858887,
         "use_cuda": false
     }
 }

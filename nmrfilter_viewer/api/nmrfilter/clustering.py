@@ -4,15 +4,18 @@ import configparser
 import os
 
 def Two_Column_List(file):
-    with open(file) as input:
-        mycsv = csv.reader(input, delimiter='\t', skipinitialspace=True)
-        peaks = []
-        i=0
-        for cols in mycsv:
-            if len(cols)==2:
-                peaks.append([i,float(cols[0].strip()),float(cols[1].strip())])
-                i+=1
-    return peaks
+	with open(file) as input:
+		mycsv = csv.reader(input, delimiter='\t', skipinitialspace=True)
+		peaks = []
+		i=0
+		for cols in mycsv:
+			#if len(cols)==2 and cols[1]!='':
+			if len(cols)==2:
+				#print(cols)
+				peaks.append([i,float(cols[0].strip()),float(cols[1].strip())])
+				i+=1
+				print(peaks)
+	return peaks
 
 def setofy(peaks):
 	yvalues=set()
@@ -22,7 +25,7 @@ def setofy(peaks):
 
 def cluster2dspectrum(cp, project):
 	datapath=cp.get('datadir')
-	
+
 	C_LIMIT=float(cp.get('tolerancec'))
 	H_LIMIT=float(cp.get('toleranceh'))
 
