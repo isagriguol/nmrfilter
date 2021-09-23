@@ -12,7 +12,6 @@ import subprocess
 import configparser
 import pandas as pd
 import numpy as np
-import csv
 
 personal = Blueprint('personal', __name__, template_folder='templates')
 
@@ -30,14 +29,14 @@ class NpEncoder(json.JSONEncoder):
         else:
             return super(NpEncoder, self).default(obj)
 
-def convert_df(src,uid):
-    f = open('api/static/results/%s/realspectrum.csv' %uid, 'w')
-    writer = csv.writer(f, delimiter='\t')
+'''def convert_df(src,uid): 
     peaks = pd.read_excel(src)
     f1 = peaks['f1 (ppm)'].tolist()
+    del f1[0]
     f1.insert(0,'HSQC')
     f2 = peaks['f2 (ppm)'].tolist()
-    f2.insert(0,'') 
+    del f2[0]
+    f2.insert(0,'')
     f3 = peaks['f1 (ppm).1'].tolist()
     f3.insert(0,'HMBC')
     f4 = peaks['f2 (ppm).1'].tolist()
@@ -48,16 +47,14 @@ def convert_df(src,uid):
     a = 0 
     for i in lst1:
         j = lst2[a]
-        if (type(j) == float and j>3) or type(j)==str:
-            lst.append((i,j))
+        lst.append((i,j))
         a = a + 1
+    df = pd.DataFrame(lst).dropna()
+    df.to_csv('api/static/results/%s/realspectrum.csv' %uid, header=False, index=False, sep='\t')'''
 
-    writer.writerows(lst)
-    f.close()
-
-'''def convert_df(src,uid): 
-    peaks = pd.read_excel(src)
-    #peaks = pd.read_csv(src)
+def convert_df(src,uid): 
+    #peaks = pd.read_excel(src)
+    peaks = pd.read_csv(src)
     f1 = peaks['f1 (ppm)'].tolist()
     f1.insert(0,'')
     del f1[1]
@@ -86,39 +83,9 @@ def convert_df(src,uid):
     df.set_index('', inplace=True)
     df = df.replace('', np.nan, regex=True)
     df.to_csv('api/static/results/%s/realspectrum.csv' %uid, header=True, index=True)
-    #return df'''
-'''def convert_df(src,uid):
-    picos = pd.read_excel(src)
-    f1 = picos['f1 (ppm)'].tolist()
-    #f1.insert(0,'')
-    f1.insert(0,'HSQC')
-    f2 = picos['f2 (ppm)'].tolist()
-    #f2.insert(0,'HSQC')
-    f2.insert(0, '')
-    f3 = picos['f1 (ppm).1'].tolist()
-    f3.insert(0,'HMBC')
-    f4 = picos['f2 (ppm).1'].tolist()
-    f4.insert(0,'')
-    lst1 = f1 + f3
-    lst2 = f2 + f4
-    lst = []
-    a = 0 
-    for i in lst1:
-        j = lst2[a]
-        if (type(j) == float and j>3) or type(j)==str:
+    #return df
 
-            lst.append((i,j))
-        a = a + 1
-    df = pd.DataFrame(lst).dropna()
-    
-    #newheader = df.iloc[0]
-    #df = df[1:]
-    #df.columns = newheader
-    #df.set_index('', inplace=True)
-    #df = df.replace('', np.nan, regex=True)
-    #df.to_csv('api/static/results/%s/realspectrum.csv' %uid, header=True, index=False,sep='\t')
-    df = df.replace('', np.nan, regex=True)
-    df.to_csv('api/static/results/%s/realspectrum.csv' %uid, header=False, index=False,sep='\t', na_rep='')'''
+
 
 @personal.route('/')
 def index():
@@ -189,30 +156,24 @@ def analysis():
             if len(peaks)==1:
                 print(peaks) 
                 src = os.path.join('api/static/uploads', peaks[0])
+                ## apagar a linha debaixo depois
                 dst = os.path.join('api/static/results', uid, peaks[0].split('_')[1])
-                #shutil.copyfile(src, dst)
-                convert_df(src,uid)
-            #trecho para funcionar com o realspectrum.csv original
-            '''if len(peaks)==1:
-                src = os.path.join('api/static/uploads', peaks[0])
-                dst = os.path.join('api/static/results', uid, peaks[0].split('_')[1])
-                shutil.copyfile(src, dst)'''
-
+                shutil.copyfile(src, dst)
+                ## apagando apenas para teste, voltar depois 
+                #convert_df(src,uid)
             '''else: 
                 except Exception as e:
                     return render_template('testando.html', options=options,
                                    error=str(e))'''
             if len(molecules)==1:
-                src = os.path.join('api/static/uploads', molecules[0])
-                mol = pd.read_csv(src)
-                df = pd.DataFrame(mol)
-                df['SMILES'].to_csv('api/static/results/%s/testall.smi' %uid, header=None, index=None)
-                df['compound NAME'].to_csv('api/static/results/%s/testallnames.txt' %uid, header=None, index=None)
-
-            '''for fn in molecules:
+                src = os.path.join('api/static/uploads', peaks[0])
+                
+                print(molecules)
+            
+            for fn in molecules:
                 src = os.path.join('api/static/uploads', fn)
                 dst = os.path.join('api/static/results', uid, fn.split('_')[1])
-                shutil.copyfile(src, dst)'''
+                shutil.copyfile(src, dst)
 
             config = configparser.RawConfigParser()
             config.read('nmrproc.properties')
